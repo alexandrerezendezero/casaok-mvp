@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Casa OK — Encontre Seu Profissional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-deep:   #1A3F6F;
+      --blue-mid:    #2563A8;
+      --blue-light:  #4A90D9;
+      --blue-pale:   #EBF3FC;
+      --gray-100:    #F5F7FA;
+      --gray-200:    #E8ECF2;
+      --gray-400:    #9AA5B4;
+      --gray-700:    #3D4A5C;
+      --white:       #FFFFFF;
+      --accent:      #F0A500;
+      --radius:      16px;
+      --shadow-sm:   0 2px 8px rgba(26,63,111,.08);
+      --shadow-md:   0 8px 32px rgba(26,63,111,.13);
+      --shadow-lg:   0 20px 60px rgba(26,63,111,.18);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--gray-100);
+      color: var(--gray-700);
+    }
+
+    /* ── Background ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(37,99,168,.10) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 85% 90%, rgba(74,144,217,.08) 0%, transparent 70%),
+        linear-gradient(160deg, #f0f4fa 0%, #e8f0f9 50%, #f5f7fa 100%);
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 20px;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      margin-bottom: 40px;
+      animation: fadeDown .6s ease both;
+    }
+    .logo-wrap img {
+      height: 90px;
+      filter: drop-shadow(0 4px 12px rgba(26,63,111,.18));
+    }
+
+    /* ── Card central ── */
+    .card {
+      background: var(--white);
+      border-radius: 24px;
+      box-shadow: var(--shadow-lg);
+      padding: 48px 44px 44px;
+      width: 100%; max-width: 480px;
+      animation: fadeUp .7s ease both .1s;
+    }
+
+    .card-title {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.55rem; font-weight: 800;
+      color: var(--blue-deep);
+      text-align: center;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .card-sub {
+      text-align: center;
+      color: var(--gray-400);
+      font-size: .95rem;
+      margin-bottom: 36px;
+    }
+
+    /* ── Botões de escolha ── */
+    .choice-btn {
+      display: flex; align-items: center; gap: 18px;
+      width: 100%;
+      background: var(--blue-pale);
+      border: 2px solid transparent;
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      cursor: pointer;
+      transition: all .22s ease;
+      text-align: left;
+      margin-bottom: 16px;
+      text-decoration: none;
+    }
+    .choice-btn:last-of-type { margin-bottom: 0; }
+
+    .choice-btn:hover {
+      border-color: var(--blue-mid);
+      background: var(--white);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .choice-icon {
+      width: 52px; height: 52px; flex-shrink: 0;
+      background: var(--blue-mid);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      transition: background .22s;
+    }
+    .choice-btn:hover .choice-icon { background: var(--blue-deep); }
+
+    .choice-text strong {
+      display: block;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1.05rem;
+      color: var(--blue-deep);
+    }
+    .choice-text span {
+      font-size: .875rem;
+      color: var(--gray-400);
+      margin-top: 2px;
+      display: block;
+    }
+
+    .choice-arrow {
+      margin-left: auto;
+      color: var(--blue-light);
+      font-size: 1.3rem;
+      transition: transform .2s;
+    }
+    .choice-btn:hover .choice-arrow { transform: translateX(4px); }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+      color: var(--gray-400); font-size: .8rem;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: var(--gray-200);
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 32px;
+      font-size: .8rem;
+      color: var(--gray-400);
+      text-align: center;
+      animation: fadeUp .8s ease both .3s;
+    }
+    .footer strong { color: var(--blue-mid); }
+
+    /* ── Animações ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 520px) {
+      .card { padding: 36px 24px 32px; }
+      .card-title { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Casa OK — Encontre Seu Profissional"/>
+  </div>
+
+  <div class="card">
+    <h1 class="card-title">Como podemos te ajudar?</h1>
+    <p class="card-sub">Selecione o seu perfil para continuar</p>
+
+    <a href="cliente.html" class="choice-btn">
+      <div class="choice-icon">🏠</div>
+      <div class="choice-text">
+        <strong>Preciso de um serviço</strong>
+        <span>Encontre profissionais qualificados perto de você</span>
+      </div>
+      <span class="choice-arrow">›</span>
+    </a>
+
+    <div class="divider">ou</div>
+
+    <a href="profissional.html" class="choice-btn">
+      <div class="choice-icon">🔧</div>
+      <div class="choice-text">
+        <strong>Sou profissional</strong>
+        <span>Cadastre-se e receba solicitações de serviços</span>
+      </div>
+      <span class="choice-arrow">›</span>
+    </a>
+  </div>
+
+  <p class="footer">
+    Seus dados são tratados com total sigilo.<br/>
+    © 2025 <strong>Casa OK</strong> — Todos os direitos reservados.
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Casa OK — Cadastro Profissional</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue-deep:  #1A3F6F;
+      --blue-mid:   #2563A8;
+      --blue-light: #4A90D9;
+      --blue-pale:  #EBF3FC;
+      --orange:     #F0A500;
+      --orange-pale:#FEF3DC;
+      --gray-100:   #F5F7FA;
+      --gray-200:   #E8ECF2;
+      --gray-400:   #9AA5B4;
+      --gray-700:   #3D4A5C;
+      --white:      #FFFFFF;
+      --green:      #22C55E;
+      --red:        #EF4444;
+      --radius:     14px;
+      --shadow-md:  0 8px 32px rgba(26,63,111,.12);
+      --shadow-lg:  0 20px 60px rgba(26,63,111,.16);
+    }
+    html, body { min-height: 100%; font-family: 'DM Sans', sans-serif; background: var(--gray-100); color: var(--gray-700); }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 90% 5%, rgba(240,165,0,.07) 0%, transparent 70%),
+        linear-gradient(160deg, #f0f4fa 0%, #e8f0f9 50%, #f5f7fa 100%);
+    }
+    .page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 32px 20px 48px; }
+
+    /* Header */
+    .top-bar { width: 100%; max-width: 580px; display: flex; align-items: center; gap: 16px; margin-bottom: 32px; animation: fadeDown .5s ease both; }
+    .back-btn { display: flex; align-items: center; gap: 6px; text-decoration: none; color: var(--blue-mid); font-weight: 600; font-size: .9rem; padding: 8px 14px; border-radius: 10px; background: var(--white); box-shadow: var(--shadow-md); transition: all .2s; }
+    .back-btn:hover { background: var(--blue-pale); }
+    .top-logo img { height: 48px; }
+
+    /* Card */
+    .card { background: var(--white); border-radius: 24px; box-shadow: var(--shadow-lg); padding: 44px 44px 40px; width: 100%; max-width: 580px; animation: fadeUp .6s ease both .1s; }
+    .card-header { margin-bottom: 32px; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; background: var(--orange-pale); color: var(--orange); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; margin-bottom: 12px; }
+    .card-title { font-family: 'Nunito', sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--blue-deep); line-height: 1.3; }
+    .card-sub { color: var(--gray-400); font-size: .9rem; margin-top: 6px; }
+
+    /* Form */
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: .85rem; font-weight: 600; color: var(--blue-deep); margin-bottom: 6px; }
+    label span.req { color: var(--red); margin-left: 2px; }
+    input, textarea {
+      width: 100%; padding: 13px 16px; border: 2px solid var(--gray-200);
+      border-radius: var(--radius); font-family: 'DM Sans', sans-serif; font-size: .95rem;
+      color: var(--gray-700); background: var(--gray-100); outline: none;
+      transition: border-color .2s, background .2s;
+    }
+    input:focus, textarea:focus { border-color: var(--blue-light); background: var(--white); }
+    textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    input::placeholder, textarea::placeholder { color: var(--gray-400); }
+
+    /* Especialidades */
+    .esp-group { display: flex; flex-direction: column; gap: 10px; }
+    .esp-row { display: flex; align-items: center; gap: 8px; }
+    .esp-num { width: 28px; height: 28px; background: var(--orange-pale); color: var(--orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .85rem; flex-shrink: 0; }
+    .esp-row input { flex: 1; }
+
+    /* Upload */
+    .upload-area {
+      border: 2px dashed var(--gray-200); border-radius: var(--radius);
+      background: var(--gray-100); padding: 28px 20px; text-align: center;
+      cursor: pointer; transition: all .22s; position: relative;
+    }
+    .upload-area:hover, .upload-area.drag { border-color: var(--orange); background: var(--orange-pale); }
+    .upload-area input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-icon { font-size: 2rem; margin-bottom: 8px; }
+    .upload-label { font-family: 'Nunito', sans-serif; font-weight: 700; color: var(--blue-mid); font-size: 1rem; }
+    .upload-hint { color: var(--gray-400); font-size: .8rem; margin-top: 4px; }
+    .file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+    .file-item { display: flex; align-items: center; gap: 8px; background: var(--orange-pale); border-radius: 8px; padding: 8px 12px; font-size: .85rem; color: var(--gray-700); }
+    .file-item .remove { margin-left: auto; cursor: pointer; color: var(--gray-400); font-size: 1rem; background: none; border: none; }
+    .file-item .remove:hover { color: var(--red); }
+
+    /* Progress */
+    .progress-wrap { display: none; margin-top: 12px; }
+    .progress-bar { height: 6px; background: var(--gray-200); border-radius: 99px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--orange), #f7c55a); border-radius: 99px; width: 0; transition: width .3s; }
+    .progress-text { font-size: .8rem; color: var(--gray-400); margin-top: 4px; text-align: right; }
+
+    /* Info box */
+    .info-box { background: var(--blue-pale); border-radius: var(--radius); padding: 14px 16px; font-size: .85rem; color: var(--blue-mid); display: flex; gap: 10px; margin-bottom: 20px; line-height: 1.5; }
+
+    /* Submit */
+    .submit-btn {
+      width: 100%; margin-top: 28px; padding: 16px;
+      background: linear-gradient(135deg, var(--orange) 0%, #f7c55a 100%);
+      color: var(--white); border: none; border-radius: var(--radius);
+      font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 800;
+      cursor: pointer; transition: all .22s; box-shadow: 0 4px 16px rgba(240,165,0,.35);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(240,165,0,.4); }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--white); border-radius: 14px; box-shadow: var(--shadow-lg); padding: 16px 24px; display: flex; align-items: center; gap: 12px; font-size: .95rem; font-weight: 600; transition: transform .35s ease; z-index: 999; min-width: 280px; border-left: 4px solid var(--green); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast.error { border-color: var(--red); }
+
+    /* Animações */
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @media (max-width: 620px) { .card { padding: 32px 20px 28px; } }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="top-bar">
+    <a href="index.html" class="back-btn">‹ Voltar</a>
+    <div class="top-logo"><img src="logo.png" alt="Casa OK"/></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="badge">🔧 Área do Profissional</div>
+      <h1 class="card-title">Cadastre-se e receba clientes</h1>
+      <p class="card-sub">Preencha seu perfil para que possamos te conectar com clientes na sua região.</p>
+    </div>
+
+    <div id="formArea">
+
+      <div class="info-box">
+        🔒 Seus dados são tratados com total sigilo e utilizados apenas para conectar você a clientes.
+      </div>
+
+      <div class="form-group">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Seu nome completo" required/>
+      </div>
+
+      <div class="form-group">
+        <label>Telefone / WhatsApp <span class="req">*</span></label>
+        <input type="tel" id="telefone" placeholder="(31) 9 0000-0000" required/>
+      </div>
+
+      <div class="form-group">
+        <label>Endereço completo <span class="req">*</span></label>
+        <input type="text" id="endereco" placeholder="Rua, número, bairro, cidade — CEP" required/>
+      </div>
+
+      <div class="form-group">
+        <label>Especialidades <span class="req">*</span> <span style="color:var(--gray-400);font-weight:400">(informe até 3)</span></label>
+        <div class="esp-group">
+          <div class="esp-row"><div class="esp-num">1</div><input type="text" id="esp1" placeholder="Ex: Encanamento, Elétrica, Pintura..."/></div>
+          <div class="esp-row"><div class="esp-num">2</div><input type="text" id="esp2" placeholder="Ex: Marcenaria, Alvenaria..."/></div>
+          <div class="esp-row"><div class="esp-num">3</div><input type="text" id="esp3" placeholder="Ex: Reformas em geral..."/></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Documento de identificação com foto <span class="req">*</span></label>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="arquivos" accept="image/*,.pdf" multiple/>
+          <div class="upload-icon">🪪</div>
+          <div class="upload-label">Enviar foto do documento de identificação</div>
+          <div class="upload-hint">RG, CNH ou outro documento com foto — JPG, PNG ou PDF</div>
+        </div>
+        <div class="file-list" id="fileList"></div>
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-text" id="progressText">0%</div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="enviarFormulario()">
+        <span>Enviar cadastro</span> <span>→</span>
+      </button>
+    </div>
+
+    <div id="successArea" style="display:none; text-align:center; padding: 40px 0;">
+      <div style="font-size:3.5rem; margin-bottom:16px;">✅</div>
+      <h2 style="font-family:'Nunito',sans-serif; color:var(--blue-deep); font-size:1.4rem; font-weight:800; margin-bottom:8px;">Cadastro enviado!</h2>
+      <p style="color:var(--gray-400); font-size:.95rem; line-height:1.6;">Seus dados foram registrados com sucesso.<br/>Em breve entraremos em contato para validar seu cadastro.</p>
+      <a href="index.html" style="display:inline-block; margin-top:28px; padding:12px 28px; background:var(--orange-pale); color:var(--orange); border-radius:12px; font-weight:700; text-decoration:none; font-size:.95rem;">← Voltar ao início</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">
+  <span id="toastIcon">✅</span>
+  <span id="toastMsg">Enviado com sucesso!</span>
+</div>
+
+<script>
+// ── Configuração Google Drive ──────────────────────────────────────
+const FOLDER_ID    = '1rCEG-bvLPAtcevZPbJAiVkpirfm-VLdd';
+const CLIENT_EMAIL = 'casaok-upload@third-being-497504-a2.iam.gserviceaccount.com';
+const PRIVATE_KEY  = `-----BEGIN PRIVATE KEY-----
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCu40zRT2DVh4H2
+EouzqabL11OAhzxRUncvQnBI2VF/apce+M7JskCJWmhclaF3fSuYja08Yt3fB5MK
+b9HxTMTPdswLGsFXnS4cw9vxBsHGh3P09YiLbiF3Ay/W+6TLmX/447nqBQBnMv9I
+ClFKzAKFqqpk2RmVBvtHSF/BERnuENdC3pIgip2ap16LxQVn9w8nJNcZo8/s3fqZ
+2uWXEXcVunnWZHmccF6W1V/f/BT1WAbZ29eU45h+UJj+XJW5mtxlrqzmqp9wn5pA
+VHZ/L0KQC2idIwEmmosGZxPZ+xNS9fSuurdm75eYmxXbYFgPR1CfIBp+qVDDtvcn
+HX1rpZ4tAgMBAAECggEACJe6an5P763cwM5gds9bFqDZxXLfj89Rc8z731huHKiM
+DEWFq3uymA0NG59uc4R+49vyKwlghVjF7LlZw1VWRis8Ez+ZSEi8v0UQRWNjmfGF
+zP9TWiZrFoHdk96BVk+QbhYiSFE+l9N1n4CCRf6IETE1dgcErsHNDs+LhNzmPUAZ
+xh95mR3ggO+5n0dlz+nrIlAV+QT75jErTsR2ZLOXt7HfeKJKDC1fWnvAiaPoo+bm
+uEaGulUX2fyFzxpvqaQfnIBIVoIyE/D0B773iFU88KFzz0YDQBOhjQ7IUoUmXw8f
++a9g2REVuY4f4GqeVKWj9k6mfORtcm6iD/7E8K1QMQKBgQDaKgU4AwgjCK1w/1ig
+ecohhoS/CG18eRigCfVW8SyzYsxpnhpVCCaJEYdQj1JKJUimz3/H5jMPMp5dFoYj
+AsKNi/SiSq75ksvPT+e/SMGjJsOmCT3PCeLob6Zj1VbZefVkFba5u1EqMaWMaW0+
+d2chYTyHrm+/mHjl1vJ1HUV0DwKBgQDNN+o6lcKWpk+WfggiM9d1Zn252QHH6QhV
+zATyurl7P67YXk+nZ36pVBWIDJK2ywIg0kpU8Nm0TPBDP+ha227yQlx6pVJrLq3z
+ltMsS/3mLfCW88pINPmm/H16K6PWSwy53/vW1mWZZWGMGu8Qv0/CKuskf9qdBqon
+DAwcYoyeAwKBgQCtHVLu01kNk8EtPTHyhTHj0H5dqC5Y6y6jL8PCrbWu0uMpnA+B
+EeqiMYqSXmgJ9fPkihr3YK97i8smSs090t7WuwvwDBs0Z0vawak/nFgrQoNVqVem
+hk3L62y5I3y7LY+PT7ujPgR12tdmx/Gr88ueLS5+6+g4vKCSoTHbxNJr+QKBgQCP
+IvP1nuVVjHSwpAFqUbxzP2RsD0dlt01AAohlAQZER9vdQJLQUaiP1H0cIqDmbFx0
+phiAfGlsj8l5LocTcEBHKzAzv0HoTmu4Hjf2ip5yQRKxRyOND54d8bhXUT76Reh/
+cRHH/ExrHMJYJaUfikDIToUqNR83LSHbEFUWK0qnHwKBgQCJiFh2/SDHV3HQiIOz
+VAgHJ6wFDaUSipViXo19yyandGEj1kzhmJIkq25noliawJJd2qPAyVqPfxIz0vJl
+MXseThqhMQw/WJlvDIhhrM9ZUE8bFKOIUXYcVtcjIc921wcfHjhmyB82Yc5LlQL4
+fKd7KzqeWyF6CyYKd0eOjqksRw==
+-----END PRIVATE KEY-----`;
+
+// ── Gerenciamento de arquivos ──────────────────────────────────────
+let selectedFiles = [];
+
+document.getElementById('arquivos').addEventListener('change', function(e) {
+  const novos = Array.from(e.target.files);
+  novos.forEach(f => { if (!selectedFiles.find(x => x.name===f.name)) selectedFiles.push(f); });
+  renderFileList();
+});
+
+const ua = document.getElementById('uploadArea');
+ua.addEventListener('dragover', e => { e.preventDefault(); ua.classList.add('drag'); });
+ua.addEventListener('dragleave', () => ua.classList.remove('drag'));
+ua.addEventListener('drop', e => {
+  e.preventDefault(); ua.classList.remove('drag');
+  Array.from(e.dataTransfer.files).forEach(f => { if (!selectedFiles.find(x=>x.name===f.name)) selectedFiles.push(f); });
+  renderFileList();
+});
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  list.innerHTML = '';
+  selectedFiles.forEach((f, i) => {
+    const el = document.createElement('div');
+    el.className = 'file-item';
+    el.innerHTML = `<span>📎</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span style="color:var(--gray-400);font-size:.8rem">${(f.size/1024/1024).toFixed(1)}MB</span><button class="remove" onclick="removeFile(${i})">✕</button>`;
+    list.appendChild(el);
+  });
+}
+function removeFile(i) { selectedFiles.splice(i,1); renderFileList(); }
+
+// ── JWT / OAuth ────────────────────────────────────────────────────
+
+// btoa seguro para Unicode
+function b64url(obj) {
+  const str = typeof obj === 'string' ? obj : JSON.stringify(obj);
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+}
+
+async function getAccessToken() {
+  const now = Math.floor(Date.now()/1000);
+  const header  = b64url({alg:'RS256', typ:'JWT'});
+  const payload = b64url({
+    iss: CLIENT_EMAIL,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    aud: 'https://oauth2.googleapis.com/token',
+    exp: now + 3600,
+    iat: now
+  });
+
+  const sigInput = `${header}.${payload}`;
+
+  // Limpa a chave: remove cabeçalho/rodapé PEM e qualquer espaço/quebra
+  const keyData = PRIVATE_KEY
+    .replace(/-----BEGIN PRIVATE KEY-----/, '')
+    .replace(/-----END PRIVATE KEY-----/, '')
+    .replace(/\s+/g, '');
+
+  const binaryKey = Uint8Array.from(atob(keyData), c => c.charCodeAt(0));
+
+  const cryptoKey = await crypto.subtle.importKey(
+    'pkcs8',
+    binaryKey.buffer,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+
+  const sigBytes = await crypto.subtle.sign(
+    'RSASSA-PKCS1-v1_5',
+    cryptoKey,
+    new TextEncoder().encode(sigInput)
+  );
+
+  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sigBytes)))
+    .replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
+
+  const jwt = `${sigInput}.${sigB64}`;
+
+  const resp = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
+  });
+  const data = await resp.json();
+  if (!data.access_token) {
+    console.error('Resposta Google OAuth:', JSON.stringify(data));
+    throw new Error('Falha na autenticação: ' + (data.error_description || data.error || 'erro desconhecido'));
+  }
+  return data.access_token;
+}
+
+async function uploadFile(file, token, pasta, onProgress) {
+  const meta = JSON.stringify({name:file.name, parents:[pasta]});
+  const form = new FormData();
+  form.append('metadata', new Blob([meta],{type:'application/json'}));
+  form.append('file', file);
+  return new Promise((resolve,reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST','https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+    xhr.setRequestHeader('Authorization','Bearer '+token);
+    xhr.upload.onprogress = e => { if(e.lengthComputable) onProgress(e.loaded/e.total); };
+    xhr.onload = () => xhr.status<300 ? resolve(JSON.parse(xhr.responseText)) : reject(new Error('Erro '+xhr.status));
+    xhr.onerror = () => reject(new Error('Erro de rede'));
+    xhr.send(form);
+  });
+}
+
+async function enviarFormulario() {
+  const nome     = document.getElementById('nome').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const endereco = document.getElementById('endereco').value.trim();
+  const esp1     = document.getElementById('esp1').value.trim();
+
+  if(!nome||!telefone||!endereco||!esp1) {
+    showToast('Preencha todos os campos obrigatórios.', true); return;
+  }
+  if(selectedFiles.length===0) {
+    showToast('Envie ao menos um documento de identificação.', true); return;
+  }
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled=true; btn.innerHTML='<span>Enviando...</span>';
+
+  try {
+    const token = await getAccessToken();
+
+    const esp2 = document.getElementById('esp2').value.trim();
+    const esp3 = document.getElementById('esp3').value.trim();
+    const especialidades = [esp1,esp2,esp3].filter(Boolean).join(', ');
+
+    // Criar pasta do profissional no Drive
+    const nomePasta = `${new Date().toISOString().slice(0,10)} — ${nome}`;
+    const pastaResp = await fetch('https://www.googleapis.com/drive/v3/files',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body: JSON.stringify({name:nomePasta, mimeType:'application/vnd.google-apps.folder', parents:[FOLDER_ID]})
+    });
+    const pasta = await pastaResp.json();
+
+    // Salvar dados em txt
+    const dadosTxt = `CADASTRO DE PROFISSIONAL — CASA OK\n${'─'.repeat(40)}\nData/Hora: ${new Date().toLocaleString('pt-BR')}\nNome: ${nome}\nTelefone: ${telefone}\nEndereço: ${endereco}\nEspecialidades: ${especialidades}\n`;
+    const txtBlob = new Blob([dadosTxt],{type:'text/plain'});
+    await uploadFile(new File([txtBlob],'dados.txt'), token, pasta.id, ()=>{});
+
+    // Upload de documentos
+    const progWrap = document.getElementById('progressWrap');
+    progWrap.style.display='block';
+    for(let i=0;i<selectedFiles.length;i++) {
+      await uploadFile(selectedFiles[i], token, pasta.id, (pct)=>{
+        const total = ((i+pct)/selectedFiles.length)*100;
+        document.getElementById('progressFill').style.width=total+'%';
+        document.getElementById('progressText').textContent=`Enviando ${i+1}/${selectedFiles.length} — ${Math.round(total)}%`;
+      });
+    }
+
+    window.location.href = 'confirmacao-profissional.html';
+
+  } catch(err) {
+    console.error(err);
+    showToast('Erro ao enviar: '+err.message, true);
+    btn.disabled=false; btn.innerHTML='<span>Enviar cadastro</span><span>→</span>';
+  }
+}
+
+function showToast(msg, isError=false) {
+  const t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  document.getElementById('toastIcon').textContent=isError?'❌':'✅';
+  t.className='toast'+(isError?' error':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),4000);
+}
+
+document.getElementById('telefone').addEventListener('input', function(e) {
+  let v=e.target.value.replace(/\D/g,'').slice(0,11);
+  if(v.length>10) v=v.replace(/^(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
+  else if(v.length>6) v=v.replace(/^(\d{2})(\d{4})(\d*)/,'($1) $2-$3');
+  else if(v.length>2) v=v.replace(/^(\d{2})(\d*)/,'($1) $2');
+  e.target.value=v;
+});
+</script>
+</body>
+</html>

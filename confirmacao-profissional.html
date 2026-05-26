@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Casa OK — Cadastro Recebido</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue-deep:   #1A3F6F;
+      --blue-mid:    #2563A8;
+      --blue-light:  #4A90D9;
+      --blue-pale:   #EBF3FC;
+      --gray-100:    #F5F7FA;
+      --gray-200:    #E8ECF2;
+      --gray-400:    #9AA5B4;
+      --gray-700:    #3D4A5C;
+      --white:       #FFFFFF;
+      --orange:      #D97706;
+      --orange-mid:  #F0A500;
+      --orange-pale: #FEF3C7;
+      --radius:      16px;
+      --shadow-lg:   0 20px 60px rgba(26,63,111,.15);
+    }
+    html, body { min-height: 100%; font-family: 'DM Sans', sans-serif; background: var(--gray-100); color: var(--gray-700); }
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 50% at 85% 5%, rgba(240,165,0,.10) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 10% 90%, rgba(37,99,168,.07) 0%, transparent 70%),
+        linear-gradient(160deg, #f0f4fa 0%, #e8f0f9 50%, #f5f7fa 100%);
+    }
+
+    .page {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; padding: 40px 20px 60px;
+    }
+
+    /* Logo */
+    .logo-wrap { margin-bottom: 32px; animation: fadeDown .5s ease both; }
+    .logo-wrap img { height: 72px; filter: drop-shadow(0 4px 12px rgba(26,63,111,.15)); }
+
+    /* Card principal */
+    .card {
+      background: var(--white); border-radius: 28px;
+      box-shadow: var(--shadow-lg);
+      width: 100%; max-width: 600px;
+      overflow: hidden;
+      animation: fadeUp .6s ease both .1s;
+    }
+
+    /* Header laranja */
+    .card-header {
+      background: linear-gradient(135deg, #B45309 0%, #D97706 60%, #F0A500 100%);
+      padding: 44px 40px 36px;
+      text-align: center;
+      position: relative;
+    }
+    .card-header::after {
+      content: '';
+      position: absolute; bottom: -1px; left: 0; right: 0;
+      height: 32px;
+      background: var(--white);
+      border-radius: 28px 28px 0 0;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: rgba(255,255,255,.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 20px;
+      border: 3px solid rgba(255,255,255,.4);
+    }
+    .card-header h1 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+    }
+    .card-header p {
+      color: rgba(255,255,255,.85);
+      font-size: .95rem; margin-top: 8px;
+    }
+
+    /* Body */
+    .card-body { padding: 36px 40px 40px; }
+
+    .section-label {
+      font-size: .75rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--gray-400); margin-bottom: 16px;
+    }
+
+    /* Itens */
+    .info-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
+
+    .info-item {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--gray-100);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      border-left: 4px solid var(--blue-light);
+      transition: transform .2s;
+    }
+    .info-item:hover { transform: translateX(3px); }
+
+    .info-item.highlight {
+      background: var(--orange-pale);
+      border-left-color: var(--orange-mid);
+    }
+
+    .info-icon {
+      font-size: 1.25rem; flex-shrink: 0;
+      width: 36px; height: 36px;
+      background: var(--blue-pale);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .info-item.highlight .info-icon { background: rgba(240,165,0,.15); }
+
+    .info-text {
+      font-size: .9rem; line-height: 1.55;
+      color: var(--gray-700);
+      padding-top: 4px;
+    }
+    .info-text strong { color: var(--blue-deep); font-weight: 700; }
+
+    /* Taxa destaque */
+    .taxa-box {
+      background: linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 100%);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 12px;
+    }
+    .taxa-num {
+      font-family: 'Nunito', sans-serif;
+      font-size: 2.2rem; font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .taxa-desc {
+      font-size: .88rem; color: rgba(255,255,255,.85);
+      line-height: 1.5;
+    }
+    .taxa-desc strong { color: var(--white); }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--gray-200); margin: 24px 0; }
+
+    /* Botão */
+    .btn-home {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-mid) 100%);
+      color: var(--white); border: none; border-radius: var(--radius);
+      font-family: 'Nunito', sans-serif; font-size: 1.05rem; font-weight: 800;
+      text-decoration: none; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(217,119,6,.35);
+      transition: all .22s;
+    }
+    .btn-home:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(217,119,6,.45); }
+
+    /* Footer */
+    .footer { margin-top: 28px; font-size: .8rem; color: var(--gray-400); text-align: center; animation: fadeUp .8s ease both .3s; }
+    .footer strong { color: var(--blue-mid); }
+
+    /* Animações */
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px);  } to { opacity:1; transform:translateY(0); } }
+
+    @media (max-width: 640px) {
+      .card-header { padding: 36px 24px 32px; }
+      .card-body { padding: 28px 24px 32px; }
+      .taxa-num { font-size: 1.8rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="logo-wrap">
+    <img src="logo.png" alt="Casa OK"/>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="success-icon">🔧</div>
+      <h1>Cadastro recebido<br/>com sucesso!</h1>
+      <p>Bem-vindo à rede Casa OK de profissionais.</p>
+    </div>
+
+    <div class="card-body">
+      <p class="section-label">📋 Próximos passos e informações</p>
+
+      <div class="info-list">
+
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <p class="info-text">
+            <strong>Nossa equipe entrará em contato com você o mais breve possível</strong> para início da elaboração de orçamentos.
+          </p>
+        </div>
+
+        <div class="info-item highlight">
+          <div class="info-icon">🎥</div>
+          <p class="info-text">
+            <strong>Antes de iniciarmos as indicações</strong>, realizamos uma videoconferência para validação das suas informações cadastrais.
+          </p>
+        </div>
+
+      </div>
+
+      <p class="section-label">💰 Modelo de comissionamento</p>
+
+      <div class="taxa-box">
+        <div class="taxa-num">10%</div>
+        <div class="taxa-desc">
+          <strong>Taxa por indicação de serviço</strong><br/>
+          Cobrada sobre o valor bruto do orçamento aprovado pelo cliente.
+        </div>
+      </div>
+
+      <div class="info-list">
+
+        <div class="info-item">
+          <div class="info-icon">💳</div>
+          <p class="info-text">
+            O pagamento é <strong>repassado 1 dia após a aprovação do cliente</strong>. Caso o cliente não aprove, será aberta uma sindicância para análise do caso.
+          </p>
+        </div>
+
+        <div class="info-item highlight">
+          <div class="info-icon">💬</div>
+          <p class="info-text">
+            Quaisquer outras dúvidas, <strong>entre em contato pelo nosso canal de comunicação oficial.</strong>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <a href="index.html" class="btn-home">
+        🏠 Voltar ao início
+      </a>
+    </div>
+  </div>
+
+  <p class="footer">© 2025 <strong>Casa OK</strong> — Todos os direitos reservados.</p>
+
+</div>
+</body>
+</html>
